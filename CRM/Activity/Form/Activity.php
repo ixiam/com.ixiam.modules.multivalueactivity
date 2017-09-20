@@ -463,15 +463,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $this->_activityTypeId = CRM_Utils_Array::value('activity_type_id', $_POST);
     }
 
-
-
-
-
-
-
-
-
-
     // when custom data is included in this page
     if (!empty($_POST['hidden_custom'])) {
       $customGroupCount = CRM_Utils_Array::value('hidden_custom_group_count', $_POST);
@@ -531,15 +522,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       );
       $this->assign('customValueCount', $this->_customValueCount);
     }
-
-
-
-
-
-
-
-
-
 
     // add attachments part
     CRM_Core_BAO_File::buildAttachment($this, 'civicrm_activity', $this->_activityId, NULL, TRUE);
@@ -857,8 +839,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     else {
       $this->assign('activityAssigneeNotification', FALSE);
     }
-
-    //echo "<pre>";print_R($this);die();
   }
 
   /**
@@ -950,7 +930,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
           NULL, NULL, TRUE
         )
       );
-
       $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
         $this->_activityId,
         'Activity'
