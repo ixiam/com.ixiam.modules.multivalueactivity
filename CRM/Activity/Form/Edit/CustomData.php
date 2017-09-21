@@ -42,7 +42,7 @@ class CRM_Activity_Form_Edit_CustomData {
    * @param CRM_Core_Form $form
    */
   public static function preProcess(&$form) {
-    $form->_type = 'ACtivity'; //CRM_Utils_Request::retrieve('type', 'String');
+    $form->_type = 'Activity';
     $form->_subType = CRM_Utils_Request::retrieve('subType', 'String');
 
     //build the custom data as other blocks.
@@ -80,19 +80,6 @@ class CRM_Activity_Form_Edit_CustomData {
       }
     }
     CRM_Custom_Form_CustomData::buildQuickForm($form);
-
-    //build custom data.
-    /*
-    $contactSubType = NULL;
-    if (!empty($_POST["hidden_custom"]) && !empty($_POST['contact_sub_type'])) {
-      $contactSubType = $_POST['contact_sub_type'];
-    }
-    else {
-      $contactSubType = CRM_Utils_Array::value('contact_sub_type', $form->_values);
-    }
-    $form->assign('contactType', $form->_contactType);
-    $form->assign('contactSubType', $contactSubType);
-    */
   }
 
   /**

@@ -493,9 +493,9 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $this->set('type', 'Activity');
       $this->set('subType', $this->_activityTypeId);
       $this->set('entityId', $this->_activityId);
-      //CRM_Custom_Form_CustomData::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity', $this->_activityId);
-      //CRM_Custom_Form_CustomData::buildQuickForm($this);
-      //CRM_Custom_Form_CustomData::setDefaultValues($this);
+      CRM_Custom_Form_CustomData::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity', $this->_activityId);
+      CRM_Custom_Form_CustomData::buildQuickForm($this);
+      CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
 
     //assign a parameter to pass for sub type multivalue
@@ -512,7 +512,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     }
     else {
       $activityType = $this->_activityTypeId;
-      // need contact sub type to build related grouptree array during post process
+      // need activity sub type to build related grouptree array during post process
       if (!empty($_POST['subType'])) {
         $activityType = $_POST['subType'];
       }
