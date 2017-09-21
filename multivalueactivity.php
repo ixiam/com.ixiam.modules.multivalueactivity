@@ -4,6 +4,26 @@ require_once 'multivalueactivity.civix.php';
 use CRM_Multivalueactivity_ExtensionUtil as E;
 
 /**
+ * Implements hook_civicrm_validateForm().
+ *
+ * @param string $formName
+ * @param array $fields
+ * @param array $files
+ * @param CRM_Core_Form $form
+ * @param array $errors
+ */
+function multivalueactivity_civicrm_validateForm($formName, &$fields, &$files, &$form, &$errors){
+  if ($formName == 'CRM_Custom_Form_Group') {
+    $extends = $fields['extends'][0];
+    if(($extends == 'Activity')  && $fields['is_multiple'] && ($fields['style'] != 'Inline')){
+      $errors['style'] = ts("Display Style should be Inline for Multivalue group for Activites");
+      $form->assign('showStyle', TRUE);
+    }
+  }
+  return;
+}
+
+/**
  * Implements hook_civicrm_config().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_config
