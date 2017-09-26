@@ -3,6 +3,16 @@
 require_once 'multivalueactivity.civix.php';
 use CRM_Multivalueactivity_ExtensionUtil as E;
 
+function multivalueactivity_civicrm_buildForm($formName, &$form) {
+  if ($formName == 'CRM_Custom_Form_CustomDataByType') {
+    $type      = CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject, TRUE);
+    $entityId  = CRM_Utils_Request::retrieve('entityID', 'Positive');
+    if($type == 'Activity'){
+      $form->assign('activityId', $entityId);
+    }
+  }
+}
+
 /**
  * Implements hook_civicrm_validateForm().
  *
