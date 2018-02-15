@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.7                                                |
+ | CiviCRM version 4.6                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2017                                |
+ | Copyright CiviCRM LLC (c) 2004-2015                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -24,6 +24,9 @@
  +--------------------------------------------------------------------+
 *}
 {* this template is used for adding/editing other (custom) activities. *}
+{if $cdType }
+  {include file="CRM/Custom/Form/CustomData.tpl"}
+{else}
   {if $action eq 4}
     <div class="crm-block crm-content-block crm-activity-view-block">
   {else}
@@ -96,12 +99,12 @@
         {if $action neq 4}
           {if !$form.target_contact_id.frozen}
             <a href="#" class="crm-hover-button" id="swap_target_assignee" title="{ts}Swap Target and Assignee Contacts{/ts}" style="position:relative; bottom: 1em;">
-              <i class="crm-i fa-random"></i>
+              <span class="icon ui-icon-shuffle"></span>
             </a>
           {/if}
           {if $activityAssigneeNotification}
             <br />
-            <span class="description"><i class="crm-i fa-paper-plane"></i> {ts}A copy of this activity will be emailed to each Assignee.{/ts} {help id="sent_copy_email"}</span>
+            <span class="description"><span class="icon ui-icon-mail-closed"></span>{ts}A copy of this activity will be emailed to each Assignee.{/ts}</span>
           {/if}
         {/if}
       </td>
@@ -152,11 +155,13 @@
     <td class="label">{$form.details.label}</td>
     {if $activityTypeName eq "Print PDF Letter"}
       <td class="view-value">
-      {$form.details.html}
+      {* If using plain textarea, assign class=huge to make input large enough. *}
+      {if $defaultWysiwygEditor eq 0}{$form.details.html|crmAddClass:huge}{else}{$form.details.html}{/if}
       </td>
       {else}
       <td class="view-value">
-       {$form.details.html|crmStripAlternatives}
+      {* If using plain textarea, assign class=huge to make input large enough. *}
+       {if $defaultWysiwygEditor eq 0}{$form.details.html|crmStripAlternatives|crmAddClass:huge}{else}{$form.details.html|crmStripAlternatives}{/if}
       </td>
     {/if}
   </tr>
@@ -214,7 +219,34 @@
   {if $action neq 4} {* Don't include "Schedule Follow-up" section in View mode. *}
   <tr class="crm-activity-form-block-schedule_followup">
     <td colspan="2">
-      {include file="CRM/Activity/Form/FollowUp.tpl" type=""}
+      <div class="crm-accordion-wrapper collapsed">
+        <div class="crm-accordion-header">
+          {ts}Schedule Follow-up{/ts}
+        </div><!-- /.crm-accordion-header -->
+        <div class="crm-accordion-body">
+          <table class="form-layout-compressed">
+            <tr><td class="label">{ts}Schedule Follow-up Activity{/ts}</td>
+              <td>{$form.followup_activity_type_id.html}&nbsp;&nbsp;{ts}on{/ts}
+              {include file="CRM/common/jcalendar.tpl" elementName=followup_date}
+              </td>
+            </tr>
+            <tr>
+              <td class="label">{$form.followup_activity_subject.label}</td>
+              <td>{$form.followup_activity_subject.html|crmAddClass:huge}</td>
+            </tr>
+              <tr>
+                  <td class="label">
+                    {$form.followup_assignee_contact_id.label}
+                    {edit}
+                    {/edit}
+                  </td>
+                  <td>
+                    {$form.followup_assignee_contact_id.html}
+                  </td>
+              </tr>
+          </table>
+        </div><!-- /.crm-accordion-body -->
+      </div><!-- /.crm-accordion-wrapper -->
       {literal}
         <script type="text/javascript">
           CRM.$(function($) {
@@ -254,7 +286,7 @@
       {if ($context eq 'fulltext' || $context eq 'search') && $searchKey}
         {assign var='urlParams' value="reset=1&atype=$atype&action=update&reset=1&id=$entityID&cid=$contactId&context=$context&key=$searchKey"}
       {/if}
-      <a href="{crmURL p='civicrm/activity/add' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}"><span><i class="crm-i fa-pencil"></i> {ts}Edit{/ts}</span></a>
+      <a href="{crmURL p='civicrm/activity/add' q=$urlParams}" class="edit button" title="{ts}Edit{/ts}"><span><div class="icon ui-icon-pencil"></div>{ts}Edit{/ts}</span></a>
     {/if}
 
     {if call_user_func(array('CRM_Core_Permission','check'), 'delete activities')}
@@ -262,11 +294,11 @@
       {if ($context eq 'fulltext' || $context eq 'search') && $searchKey}
         {assign var='urlParams' value="reset=1&atype=$atype&action=delete&reset=1&id=$entityID&cid=$contactId&context=$context&key=$searchKey"}
       {/if}
-      <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="delete button" title="{ts}Delete{/ts}"><span><i class="crm-i fa-trash"></i> {ts}Delete{/ts}</span></a>
+      <a href="{crmURL p='civicrm/contact/view/activity' q=$urlParams}" class="delete button" title="{ts}Delete{/ts}"><span><div class="icon delete-icon"></div>{ts}Delete{/ts}</span></a>
     {/if}
   {/if}
   {if $action eq 4 and call_user_func(array('CRM_Case_BAO_Case','checkPermission'), $activityId, 'File On Case', $atype)}
-    <a href="#" onclick="fileOnCase('file', {$activityId}, null, this); return false;" class="cancel button" title="{ts}File On Case{/ts}"><span><i class="crm-i fa-clipboard"></i> {ts}File on Case{/ts}</span></a>
+    <a href="#" onclick="fileOnCase('file', {$activityId}, null, this); return false;" class="cancel button" title="{ts}File On Case{/ts}"><span><div class="icon ui-icon-clipboard"></div>{ts}File on Case{/ts}</span></a>
   {/if}
   {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
@@ -276,69 +308,62 @@
   {if $action eq 1 or $action eq 2 or $context eq 'search' or $context eq 'smog'}
   {*include custom data js file*}
   {include file="CRM/common/customData.tpl"}
-
-    <script type="text/javascript">
-    CRM.$(function($) {ldelim}
-
-    function loadMultiRecordFields(subTypeValues) {ldelim}
-      if (subTypeValues === false) {ldelim}
-        subTypeValues = null;
-      {rdelim}
-      else if (!subTypeValues) {ldelim}
-        subTypeValues = "{$paramSubType}";
-      {rdelim}
-      function loadNextRecord(i, groupValue, groupCount) {ldelim}
-        if (i < groupCount) {ldelim}
-          CRM.buildCustomData("{$customDataType}", subTypeValues, null, i, groupValue, true).one('crmLoad', function() {ldelim}
-            loadNextRecord(i+1, groupValue, groupCount);
-          {rdelim});
-        {rdelim}
-      {rdelim}
-
-      {foreach from=$customValueCount item="groupCount" key="groupValue"}
-      {if $groupValue}
-      loadNextRecord(1, {$groupValue}, {$groupCount});
-      {/if}
-      {/foreach}
-    {rdelim}
-
-    {if $customDataSubType}
-      CRM.buildCustomData( '{$customDataType}', {$customDataSubType} ).one('crmLoad', function() {ldelim}
-        loadMultiRecordFields({$customDataSubType});
-      {rdelim});
-      {else}
-      CRM.buildCustomData( '{$customDataType}' ).one('crmLoad', function() {ldelim}
-        loadMultiRecordFields();
-      {rdelim});
-    {/if}
-
-
     {literal}
+    <script type="text/javascript">
+    CRM.$(function($) {
+      var $form = $("form.{/literal}{$form.formClass}{literal}");
+      var action = "{/literal}{$action}{literal}";
 
-    var $form = $("form.{/literal}{$form.formClass}{literal}");
+      {/literal}
+      function loadMultiRecordFields(subTypeValues) {ldelim}
+        if (subTypeValues === false) {ldelim}
+          subTypeValues = null;
+        {rdelim}
+        else if (!subTypeValues) {ldelim}
+          subTypeValues = "{$paramSubType}";
+        {rdelim}
 
-    // Handle delete of multi-record custom data
-    $form.on('click', '.crm-custom-value-del', function(e) {
-      e.preventDefault();
-      var $el = $(this),
-        msg = '{/literal}{ts escape="js"}The record will be deleted immediately. This action cannot be undone.{/ts}{literal}';
-      CRM.confirm({title: $el.attr('title'), message: msg})
-        .on('crmConfirm:yes', function() {
-          var url = CRM.url('civicrm/ajax/customvalue');
-          var request = $.post(url, $el.data('post'));
-          CRM.status({success: '{/literal}{ts escape="js"}Record Deleted{/ts}{literal}'}, request);
-          var addClass = '.add-more-link-' + $el.data('post').groupID;
-          $el.closest('div.crm-custom-accordion').remove();
-          $('div' + addClass).last().show();
-        });
+
+        function loadNextRecord(i, groupValue, groupCount) {ldelim}
+          if (i < groupCount) {ldelim}
+            CRM.buildCustomData("{$customDataType}", subTypeValues, null, i, groupValue, true);
+            loadNextRecord(i+1, groupValue, groupCount);
+          {rdelim}
+        {rdelim}
+
+        {foreach from=$customValueCount item="groupCount" key="groupValue"}
+        {if $groupValue}
+        loadNextRecord(1, {$groupValue}, {$groupCount});
+        {/if}
+        {/foreach}
+      {rdelim}
+
+      {if $customDataSubType}
+      CRM.buildCustomData( '{$customDataType}', {$customDataSubType} );
+      {else}
+      CRM.buildCustomData( '{$customDataType}' );
+      {/if}
+      loadMultiRecordFields({$customDataSubType});
+
+      // Handle delete of multi-record custom data
+      $form.on('click', '.crm-custom-value-del', function(e) {
+        e.preventDefault();
+        var $el = $(this),
+          msg = '{/literal}{ts escape="js"}The record will be deleted immediately. This action cannot be undone.{/ts}{literal}';
+        CRM.confirm({title: $el.attr('title'), message: msg})
+          .on('crmConfirm:yes', function() {
+            var url = CRM.url('civicrm/ajax/customvalue');
+            var request = $.post(url, $el.data('post'));
+            CRM.status({success: '{/literal}{ts escape="js"}Record Deleted{/ts}{literal}'}, request);
+            var addClass = '.add-more-link-' + $el.data('post').groupID;
+            $el.closest('div.crm-custom-accordion').remove();
+            $('div' + addClass).last().show();
+          });
+      });
     });
-    {/literal}
-
-
-    {rdelim});
-
     </script>
+    {/literal}
   {/if}
   </div>{* end of form block*}
-
+{/if} {* end of snippet if*}
 {include file="CRM/Event/Form/ManageEvent/ConfirmRepeatMode.tpl" entityID=$activityId entityTable="civicrm_activity"}

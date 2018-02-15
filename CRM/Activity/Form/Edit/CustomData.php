@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.7                                                |
+ | CiviCRM version 4.6                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2017                                |
+ | Copyright CiviCRM LLC (c) 2004-2015                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,11 +28,13 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2017
+ * @copyright CiviCRM LLC (c) 2004-2015
+ * $Id$
+ *
  */
 
 /**
- * Form helper class for an Demographics object.
+ * form helper class for an Demographics object
  */
 class CRM_Activity_Form_Edit_CustomData {
 
@@ -40,6 +42,8 @@ class CRM_Activity_Form_Edit_CustomData {
    * Build all the data structures needed to build the form.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function preProcess(&$form) {
     $form->_type = 'Activity';
@@ -66,6 +70,8 @@ class CRM_Activity_Form_Edit_CustomData {
    *
    * @param CRM_Core_Form $form
    *   Reference to the form object.
+   *
+   * @return void
    */
   public static function buildQuickForm(&$form) {
     if (!empty($form->_submitValues)) {
@@ -88,7 +94,9 @@ class CRM_Activity_Form_Edit_CustomData {
    *
    *
    * @param CRM_Core_Form $form
-   * @param array $defaults
+   * @param $defaults
+   *
+   * @return void
    */
   public static function setDefaultValues(&$form, &$defaults) {
     $defaults += CRM_Custom_Form_CustomData::setDefaultValues($form);

@@ -1,7 +1,6 @@
 <?php
 
 require_once 'multivalueactivity.civix.php';
-use CRM_Multivalueactivity_ExtensionUtil as E;
 
 function multivalueactivity_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Custom_Form_CustomDataByType') {
@@ -26,7 +25,7 @@ function multivalueactivity_civicrm_validateForm($formName, &$fields, &$files, &
   if ($formName == 'CRM_Custom_Form_Group') {
     $extends = $fields['extends'][0];
     if(($extends == 'Activity')  && $fields['is_multiple'] && ($fields['style'] != 'Inline')){
-      $errors['style'] = ts("Display Style should be Inline for Multivalue group for Activites");
+      $errors['style'] = ts("Display Style should be Inline for Multivalue group for Activites", array( 'domain' => 'com.ixiam.modules.multivalueactivity'));
       $form->assign('showStyle', TRUE);
     }
   }
