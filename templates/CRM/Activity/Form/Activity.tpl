@@ -344,6 +344,7 @@
       CRM.buildCustomData( '{$customDataType}' );
       {/if}
       loadMultiRecordFields({$customDataSubType});
+      {literal}
 
       // Handle delete of multi-record custom data
       $form.on('click', '.crm-custom-value-del', function(e) {
@@ -356,7 +357,7 @@
             var request = $.post(url, $el.data('post'));
             CRM.status({success: '{/literal}{ts escape="js"}Record Deleted{/ts}{literal}'}, request);
             var addClass = '.add-more-link-' + $el.data('post').groupID;
-            $el.closest('div.crm-custom-accordion').remove();
+            $el.closest('div.crm-accordion-wrapper').remove();
             $('div' + addClass).last().show();
           });
       });
