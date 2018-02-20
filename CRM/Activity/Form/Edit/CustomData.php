@@ -39,33 +39,6 @@
 class CRM_Activity_Form_Edit_CustomData {
 
   /**
-   * Build all the data structures needed to build the form.
-   *
-   * @param CRM_Core_Form $form
-   *
-   * @return void
-   */
-  public static function preProcess(&$form) {
-    $form->_type = 'Activity';
-    $form->_subType = CRM_Utils_Request::retrieve('subType', 'String');
-
-    //build the custom data as other blocks.
-    //$form->assign( "addBlock", false );
-    if ($form->_type) {
-      $form->_addBlockName = 'CustomData';
-      $form->assign("addBlock", TRUE);
-      $form->assign("blockName", $form->_addBlockName);
-    }
-
-    CRM_Custom_Form_CustomData::preProcess($form, NULL, $form->_subType, NULL,
-      ($form->_type) ? $form->_type : $form->_contactType
-    );
-
-    //assign group tree after build.
-    $form->assign('groupTree', $form->_groupTree);
-  }
-
-  /**
    * Build the form object elements for CustomData object.
    *
    * @param CRM_Core_Form $form

@@ -468,6 +468,22 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       $this->_activityTypeId = CRM_Utils_Array::value('activity_type_id', $_POST);
     }
 
+    if (CRM_Utils_Request::retrieve('subType', 'String')) {
+      CRM_Custom_Form_CustomData::preProcess($this);
+    }
+    else {
+      $activityType = $this->_activityTypeId;
+      // need activity sub type to build related grouptree array during post process
+      if (!empty($_POST['subType'])) {
+        $activityType = $_POST['subType'];
+      }
+      //only custom data has preprocess hence directly call it
+      CRM_Custom_Form_CustomData::preProcess($this, NULL, $activityType,
+        1, 'Activity', $this->_activityId
+      );
+      $this->assign('customValueCount', $this->_customValueCount);
+    }
+
     // when custom data is included in this page
     if (!empty($_POST['hidden_custom'])) {
       $customGroupCount = CRM_Utils_Array::value('hidden_custom_group_count', $_POST);
@@ -501,6 +517,8 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       CRM_Custom_Form_CustomData::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity', $this->_activityId);
       CRM_Custom_Form_CustomData::buildQuickForm($this);
       CRM_Custom_Form_CustomData::setDefaultValues($this);
+
+      $this->_customValueCount = $customGroupCount;
     }
 
     //assign a parameter to pass for sub type multivalue
@@ -510,22 +528,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
         str_replace(CRM_Core_DAO::VALUE_SEPARATOR, ',', trim($this->_activityTypeId, CRM_Core_DAO::VALUE_SEPARATOR));
 
       $this->assign('paramSubType', $paramSubType);
-    }
-
-    if (CRM_Utils_Request::retrieve('subType', 'String')) {
-      CRM_Activity_Form_Edit_CustomData::preProcess($this);
-    }
-    else {
-      $activityType = $this->_activityTypeId;
-      // need activity sub type to build related grouptree array during post process
-      if (!empty($_POST['subType'])) {
-        $activityType = $_POST['subType'];
-      }
-      //only custom data has preprocess hence directly call it
-      CRM_Custom_Form_CustomData::preProcess($this, NULL, $activityType,
-        1, 'Activity', $this->_activityId
-      );
-      $this->assign('customValueCount', $this->_customValueCount);
     }
 
     // add attachments part
