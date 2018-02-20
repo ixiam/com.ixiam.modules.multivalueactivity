@@ -354,11 +354,16 @@
         CRM.confirm({title: $el.attr('title'), message: msg})
           .on('crmConfirm:yes', function() {
             var url = CRM.url('civicrm/ajax/customvalue');
-            var request = $.post(url, $el.data('post'));
-            CRM.status({success: '{/literal}{ts escape="js"}Record Deleted{/ts}{literal}'}, request);
-            var addClass = '.add-more-link-' + $el.data('post').groupID;
-            $el.closest('div.crm-accordion-wrapper').remove();
-            $('div' + addClass).last().show();
+            $.post(
+              url,
+              $el.data('post'),
+              function() {
+                CRM.status('{/literal}{ts escape="js"}Record Deleted{/ts}{literal}');
+                var addClass = '.add-more-link-' + $el.data('post').groupID;
+                $el.closest('div.crm-accordion-wrapper').remove();
+                window.location.replace('{/literal}{crmURL p="civicrm/contact/view" q="cid=$contactId"}{literal}');
+              }
+            );
           });
       });
     });
